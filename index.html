@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neubrutalism Loader</title>
+    <script src="https://unpkg.com/gsap@3.12.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .loader-container {
+            background: #97CADB;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 40px;
+            background: white;
+            position: relative;
+            border: 4px solid black;
+            box-shadow: 4px 4px 0 black;
+            transition: all 0.3s ease;
+        }
+
+        .progress {
+            height: 100%;
+            background: #FF6B6B;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .image-container {
+            border: 4px solid black;
+            box-shadow: 8px 8px 0 black;
+            overflow: hidden;
+            background: white;
+        }
+
+        .logo {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .percentage {
+            font-size: 2rem;
+            color: black;
+            text-shadow: 2px 2px 0 white;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-2xl space-y-8">
+            <!-- Image Container -->
+            <div class="image-container aspect-video relative">
+                <img src="https://source.unsplash.com/random/800x450?architecture" class="w-full h-full object-cover random-image" alt="Random Image">
+                <div class="logo absolute inset-0 flex items-center justify-center bg-white">
+                    <h1 class="text-6xl font-bold" style="color: #FF6B6B;">LOGO</h1>
+                </div>
+            </div>
+
+            <!-- Progress Container -->
+            <div class="space-y-4">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="text-center">
+                    <span class="percentage">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            'https://source.unsplash.com/random/800x450?city',
+            'https://source.unsplash.com/random/800x450?nature',
+            'https://source.unsplash.com/random/800x450?technology',
+            'https://source.unsplash.com/random/800x450?abstract'
+        ];
+
+        let currentImageIndex = 0;
+        const randomImage = document.querySelector('.random-image');
+        const progress = document.querySelector('.progress');
+        const percentage = document.querySelector('.percentage');
+        const logo = document.querySelector('.logo');
+
+        function updateLoader() {
+            let currentProgress = 0;
+            const interval = setInterval(() => {
+                currentProgress += 1;
+                progress.style.width = `${currentProgress}%`;
+                percentage.textContent = `${currentProgress}%`;
+
+                if (currentProgress % 20 === 0 && currentProgress < 100) {
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                    randomImage.src = images[currentImageIndex];
+                }
+
+                if (currentProgress === 100) {
+                    clearInterval(interval);
+                    logo.style.opacity = '1';
+                    logo.style.transform = 'scale(1)';
+                    gsap.to(randomImage, {
+                        opacity: 0,
+                        duration: 0.5
+                    });
+                }
+            }, 50);
+        }
+
+        // Start the loader when the page loads
+        window.addEventListener('load', updateLoader);
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
